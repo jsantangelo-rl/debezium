@@ -68,7 +68,7 @@ public class TypeRegistry {
     private static final String SQL_TYPES = "SELECT t.oid AS oid, t.typname AS name, t.typelem AS element, t.typbasetype AS parentoid, t.typtypmod as modifiers, t.typcategory as category, e.values as enum_values "
             + "FROM pg_catalog.pg_type t "
             + "JOIN pg_catalog.pg_namespace n ON (t.typnamespace = n.oid) "
-            + "LEFT JOIN (" + SQL_ENUM_VALUES + ") e ON (t.oid = e.id) "
+            + "LEFT JOIN (" + SQL_ENUM_VALUES + ") e ON (case when t.typbasetype = 0 then t.oid = e.id else t.typbasetype = e.id end) "
             + "WHERE n.nspname != 'pg_toast'";
 
     private static final String SQL_NAME_LOOKUP = SQL_TYPES + " AND t.typname = ?";
